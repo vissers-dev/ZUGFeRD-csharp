@@ -175,13 +175,13 @@ namespace s2industries.ZUGFeRD.PDF
 
                 xmlStream.Seek(0, SeekOrigin.Begin);
                 var hashBytes = md5.ComputeHash(xmlStream);
-                xmlChecksum = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+                xmlChecksum = BitConverter.ToString(hashBytes).Replace("-", "").ToUpperInvariant();
             }
 
             var xmlFileEncodedBytes = PdfSharp.Pdf.Filters.Filtering.FlateDecode.Encode(xmlFileBytes);
 
             PdfDictionary xmlParamsDict = new PdfDictionary();
-            xmlParamsDict.Elements.Add("/CheckSum", new PdfString(xmlChecksum));
+            xmlParamsDict.Elements.Add("/CheckSum", new PdfLiteral($"<{xmlChecksum}>"));
             xmlParamsDict.Elements.Add("/ModDate", new PdfString(_FormatPdfDateTime(DateTime.UtcNow)));
             xmlParamsDict.Elements.Add("/Size", new PdfInteger(xmlFileBytes.Length));
 
